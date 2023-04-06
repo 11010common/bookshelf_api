@@ -1,3 +1,5 @@
+/* eslint-disable prefer-const */
+/* eslint-disable no-else-return */
 // Memanggil NanoId
 const {nanoid} = require('nanoid');
 // Mengekspor Bookshelf
@@ -104,6 +106,27 @@ const getAllBooksHandler = (request, h) => {
 			},
 		};
 	}
+	if (finished === 1) {
+		return {
+			status: 'success',
+			data: {
+				finishedReadingBook,
+			},
+		};
+	} else if (finished === 0) {
+		return {
+			status: 'success',
+			data: {
+				unfinishedReadingBook,
+			},
+		};
+	}
+	return {
+		status: 'success',
+		data: {
+			books: newBooks,
+		},
+	};
 };
 
 // Handler untuk menampilkan detail buku menggunakan ID
