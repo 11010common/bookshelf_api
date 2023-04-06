@@ -67,23 +67,43 @@ const savingBookHandler = (request, h) => {
 
 // Handler untuk menampilkan semua buku
 const getAllBooksHandler = (request, h) => {
-	// const {name} = request.params;
-	// const {reading} = request.params;
-	// if ({reading: 0}) {
-	// }
-	// const {finished} = request.params;
-	const response = h.response({
-		status: 'success',
-		data: {
-			books: books.map((book) => ({
-				id: books.id,
-				name: books.name,
-				publisher: book.publisher,
-			})),
-		},
+	const newBooks = books.map(({id, name, publisher}) => {
+		return {id, name, publisher};
 	});
-	response.code(200);
-	return response;
+	const {name, reading, finished} = request.query;
+	const bookByName = books.filter((book) => {
+		let bookName = `${book.name}`.toLowerCase();
+		let bookNameQuery = `${name}`.toLowerCase();
+		return bookName.includes(bookNameQuery);
+	});
+	const readingBook = books.find((book) => book.reading === true);
+	const unreadingBook = books.find((book) => book.reading === false);
+	const finishedReadingBook = books.find((book) => book.finished === true);
+	const unfinishedReadingBook = books.find((book) => book.finished === false);
+
+	if (name !== undefined) {
+		return {
+			status: 'success',
+			data: {
+				bookByName,
+			},
+		};
+	}
+	if (reading === 1) {
+		return {
+			status: 'success',
+			data: {
+				readingBook,
+			},
+		};
+	} else if (reading === 0) {
+		return {
+			status: 'success',
+			data: {
+				unreadingBook,
+			},
+		};
+	}
 };
 
 // Handler untuk menampilkan detail buku menggunakan ID
